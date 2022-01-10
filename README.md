@@ -38,7 +38,7 @@ python3 manage.py collectstatic
 python3 manage.py migrate
 ```
 
-Obs.: Não esqueça de configurar o settings.py gerado dentro de rede_soliedariedade para atender aos seus requisitos.
+Obs.: Não esqueça de configurar o settings.py gerado dentro de "<b>rede_soliedariedade<b>" para atender aos seus requisitos.
 
 ## Para iniciar o servidor local
 
