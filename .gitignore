@@ -160,3 +160,4 @@ cython_debug/
 *.css.map
 *.sass.map
 *.scss.map
+*.scss
