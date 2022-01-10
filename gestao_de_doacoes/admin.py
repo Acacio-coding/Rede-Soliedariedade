@@ -37,5 +37,5 @@ class ItensDoacaoAdmin(admin.ModelAdmin):
 
 @admin.register(Doacao)
 class DoacaoAdmin(admin.ModelAdmin):
-    list_display = ('chefe_da_familia', 'usuario', 'data')
-    list_filter = ('chefe_da_familia__chefe_da_familia', 'usuario__username', 'data')
+    list_display = ('chefe_da_familia', 'representante', 'data')
+    list_filter = ('chefe_da_familia__chefe_da_familia', 'representante__username', 'data')

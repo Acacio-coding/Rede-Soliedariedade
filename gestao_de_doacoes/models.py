@@ -61,9 +61,9 @@ class Entidade(models.Model):
         return reverse('detalhes-entidade', args=[str(self.id)])
 
 class Representante(models.Model):
-    entidade = models.ForeignKey(Entidade, on_delete=models.CASCADE)
-    representante = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
-    cpf_representante = models.CharField(max_length=11, null=True, blank=True, help_text='Digite o cpf do integrante da família')
+    entidade = models.ForeignKey(Entidade, on_delete=models.CASCADE, help_text='Selecione a entidade que o reprensentante irá representar')
+    representante = models.ForeignKey(User, null=True, on_delete=models.CASCADE, help_text='Selecione o usuário representante')
+    cpf = models.CharField(max_length=11, null=True, blank=True, help_text='Digite o cpf do integrante da família')
 
     class Meta:
         ordering = ['representante']
@@ -86,8 +86,8 @@ class Item(models.Model):
 
 
 class Doacao(models.Model):
-    chefe_da_familia = models.ForeignKey(Familia, on_delete=models.CASCADE)
-    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    chefe_da_familia = models.ForeignKey(Familia, on_delete=models.CASCADE, help_text='Selecione o chefe da família')
+    representante = models.ForeignKey(User, on_delete=models.CASCADE, help_text='Selecione o usuário representante')
     data = models.DateField(help_text='Informe a data da doação')
     justificativa = models.TextField(max_length=200, blank=True, null=True, help_text='Digite a justificativa da doação')
 
@@ -104,9 +104,9 @@ class Doacao(models.Model):
 
 
 class ItensDoacao(models.Model):
-    doacao = models.ForeignKey(Doacao,null=True, on_delete=models.CASCADE)
-    item = models.ForeignKey(Item, null=True, on_delete=models.CASCADE)
-    quantidade = models.PositiveIntegerField(null=True)
+    doacao = models.ForeignKey(Doacao,null=True, on_delete=models.CASCADE, help_text='Selecione a doação')
+    item = models.ForeignKey(Item, null=True, on_delete=models.CASCADE, help_text='Selecione o item')
+    quantidade = models.PositiveIntegerField(null=True, help_text='Digite a quantidade do item selecionado')
     
     class Meta:
         ordering = []
