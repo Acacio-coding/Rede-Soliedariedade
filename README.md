@@ -6,7 +6,7 @@ O objetivo é desenvolver um sistema web para o gerenciamento de doações para 
 
 Diagrama do projeto com classes/entidades que se relacionam
 
-![Imagem do diagrama do projeto] (diagrama.png)
+![Imagem do diagrama do projeto](diagrama.png)
 
 ## Requerimentos
 
