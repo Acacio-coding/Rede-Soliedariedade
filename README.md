@@ -2,6 +2,12 @@
 
 O objetivo é desenvolver um sistema web para o gerenciamento de doações para famílias carentes, realizadas pela Rede Soliedariedade.
 
+## Diagrama do projeto
+
+Diagrama do projeto com classes/entidades que se relacionam
+
+![Imagem do diagrama do projeto] (diagrama.png)
+
 ## Requerimentos
 
 - Python 3 ou superior
