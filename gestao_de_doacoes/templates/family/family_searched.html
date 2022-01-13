@@ -1,0 +1,69 @@
+{% extends "table_generic.html" %} 
+
+{% block table_title %}
+  Resultados da pesquisa por: <b>{{ search_term }}</b>
+{% endblock %}
+
+{% block table_search %}
+  <form action="{% url 'search_family' %}" method="GET">
+    {% csrf_token %}
+    <input class="rounded-left" type="search" name="search_term" placeholder="Pesquisar familia...">
+    <button class="rounded-right" type="submit">
+      <i class="fas fa-search"></i>
+    </button>
+  </form>
+{% endblock %}
+
+{% block table_add_button_text %}
+  Cadastrar nova família
+{% endblock %}
+
+{% block table_head %}
+  <th scope="col">ID</th>
+  <th scope="col">Chefe da família</th>
+  <th scope="col">Endereço</th>
+  <th scope="col">Telefone principal</th>
+{% endblock %}
+
+{% block table_body %}
+  {% if page %}
+    {% for family in page %}
+      <tr>
+        <th scope="row">
+          {{ family.id }}
+        </th>
+        <td>
+          {{ family.chefe_da_familia }}
+        </td>
+        <td>
+          {{ family.endereco }}
+        </td>
+        <td>
+          {{ family.telefone1 }}
+        </td>
+        <td>
+          <a href="{% url 'family_details' family.pk %}">
+            <i class="fas fa-eye"></i>
+          </a>
+        </td>
+      </tr>
+    {% endfor %}
+    {% else %}
+      <tr>
+        <td colspan="4">Não existem famílias com o parâmetro de pesquisa</td>
+      </tr>
+  {% endif %}
+{% endblock %}
+
+{% block pagination %}
+  <p>Página <b>{{ page.number }}</b> de <b>{{ page.paginator.num_pages }}</b></p>
+
+  <div>
+    {% if page.has_previous %}
+      <a class="rounded" href="{% url 'search_family' %}?page={{ page.previous_page_number }}&search_term={{ search_term }}">Anterior</a>
+    {% endif %}
+    {% if page.has_next %}
+      <a class="rounded" href="{% url 'search_family' %}?page={{ page.next_page_number }}&search_term={{ search_term }}">Próximo</a>
+    {% endif %}
+  </div>
+{% endblock %}

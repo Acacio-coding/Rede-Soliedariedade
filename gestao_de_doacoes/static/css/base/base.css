@@ -64,7 +64,7 @@
           align-items: center;
 }
 
-.col-menu .nav-menu .nav-item:hover {
+.col-menu .nav-menu .nav-item:hover, .col-menu .nav-menu .nav-item:focus {
   background: #22262a;
 }
 
@@ -103,7 +103,7 @@
   font-size: 20px;
 }
 
-.col-menu .nav-menu .nav-item .nav-link:hover {
+.col-menu .nav-menu .nav-item .nav-link:hover, .col-menu .nav-menu .nav-item .nav-link:focus {
   color: rgba(255, 255, 255, 0.7);
 }
 

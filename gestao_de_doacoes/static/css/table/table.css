@@ -1,0 +1,211 @@
+.content-container {
+  overflow-y: auto;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+@media screen and (min-width: 1280px) {
+  .content-container {
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+  }
+}
+
+@media screen and (max-width: 1279px) {
+  .content-container {
+    -webkit-box-align: start;
+        -ms-flex-align: start;
+            align-items: start;
+  }
+}
+
+.content-container .title-column {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+@media screen and (max-width: 1025px) {
+  .content-container .title-column {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    gap: 1.5em;
+  }
+}
+
+.content-container .title-column #table-title {
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1;
+  padding: 0;
+  margin: 0;
+}
+
+@media screen and (max-width: 1400px) {
+  .content-container .title-column #table-title {
+    font-size: 22px;
+  }
+}
+
+.content-container .title-column #search-holder form {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 0;
+}
+
+.content-container .title-column #search-holder form input {
+  padding: 0.5em 0.75em;
+}
+
+.content-container .title-column #search-holder form input:focus {
+  outline: none;
+}
+
+.content-container .title-column #search-holder form button {
+  padding: 0.5em 1.25em;
+  cursor: pointer;
+  background: #0c57cf;
+  color: rgba(255, 255, 255, 0.8);
+  -webkit-transition: 100ms ease;
+  transition: 100ms ease;
+}
+
+.content-container .title-column #search-holder form button:hover {
+  background: #0a47a9;
+  color: white;
+}
+
+.content-container .title-column #search-holder form button i {
+  font-size: 20px;
+}
+
+.content-container .title-column #button-holder {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 0.5em;
+}
+
+@media screen and (max-width: 900px) {
+  .content-container .title-column #button-holder {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+  }
+}
+
+.content-container .title-column #button-holder #add-button, .content-container .title-column #button-holder #remove-button, .content-container .title-column #button-holder #edit-button {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 0.5em;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.8);
+  -webkit-transition: 100ms ease;
+  transition: 100ms ease;
+}
+
+.content-container .title-column #button-holder #add-button .icon, .content-container .title-column #button-holder #remove-button .icon, .content-container .title-column #button-holder #edit-button .icon {
+  font-size: 20px;
+}
+
+.content-container .title-column #button-holder #add-button {
+  background: green;
+}
+
+.content-container .title-column #button-holder #add-button:hover, .content-container .title-column #button-holder #add-button:focus {
+  background: #006600;
+  color: white;
+}
+
+.content-container .title-column #button-holder #edit-button {
+  background: orange;
+}
+
+.content-container .title-column #button-holder #edit-button:hover, .content-container .title-column #button-holder #edit-button:focus {
+  background: #d68b00;
+  color: white;
+}
+
+.content-container .title-column #button-holder #remove-button {
+  background: red;
+}
+
+.content-container .title-column #button-holder #remove-button:hover, .content-container .title-column #button-holder #remove-button:focus {
+  background: #3d0000;
+  color: white;
+}
+
+.content-container .content-column table tbody tr td a {
+  cursor: pointer;
+  color: orange;
+  text-decoration: none;
+  font-size: 18px;
+  -webkit-transition: 100ms ease;
+  transition: 100ms ease;
+}
+
+.content-container .content-column table tbody tr td a:hover {
+  color: #996300;
+}
+
+.content-container .content-column .pagination-holder {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.content-container .content-column .pagination-holder p {
+  line-height: 1;
+  padding: 0;
+  margin: 0;
+}
+
+.content-container .content-column .pagination-holder div {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 0.5em;
+}
+
+.content-container .content-column .pagination-holder div a {
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.8);
+  background: #5c6670;
+  -webkit-transition: 50ms ease;
+  transition: 50ms ease;
+  padding: 0.5em 0.75em;
+}
+
+.content-container .content-column .pagination-holder div a:hover, .content-container .content-column .pagination-holder div a:focus {
+  background: #22262a;
+  color: white;
+}
+/*# sourceMappingURL=table.css.map */

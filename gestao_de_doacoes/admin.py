@@ -23,8 +23,8 @@ class EntidadeAdmin(admin.ModelAdmin):
 
 @admin.register(Representante)
 class RepresentanteAdmin(admin.ModelAdmin):
-    list_display = ('entidade', 'representante')
-    list_filter = ('entidade__nome_fantasia', 'representante__username')
+    list_display = ('nome', 'representante', 'cpf')
+    list_filter = ('entidade__nome_fantasia', 'nome', 'representante__username')
 
 
 admin.site.register(Item)
@@ -37,5 +37,5 @@ class ItensDoacaoAdmin(admin.ModelAdmin):
 
 @admin.register(Doacao)
 class DoacaoAdmin(admin.ModelAdmin):
-    list_display = ('chefe_da_familia', 'representante', 'data')
-    list_filter = ('chefe_da_familia__chefe_da_familia', 'representante__username', 'data')
+    list_display = ('chefe_da_familia', 'usuario', 'data')
+    list_filter = ('chefe_da_familia__chefe_da_familia', 'usuario__username', 'data')
