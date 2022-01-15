@@ -1,20 +1,20 @@
 from django.db import models
 from django.urls import reverse
 from django.contrib.auth.models import User
-from phonenumber_field.modelfields import PhoneNumberField
+from django.core.validators import RegexValidator, MinLengthValidator
 from datetime import datetime, date
 
 # Create your models here.
 class Familia(models.Model):
     chefe_da_familia = models.CharField(max_length=200, help_text='Digite o nome do chefe da família')
-    cpf = models.CharField(max_length=11, help_text='Digite o cpf do chefe da família')
+    cpf = models.CharField(max_length=11, validators=[RegexValidator(regex="^[0-9]+$", message='Digite apenas números', code='nomatch'), MinLengthValidator(11)], help_text='Digite o cpf do chefe da família')
     endereco = models.CharField(max_length=200, help_text='Digite o endereço do chefe da família', verbose_name='endereço')
-    telefone1 = PhoneNumberField(help_text='Digite o telefone principal do chefe da família', verbose_name='telefone principal')
-    telefone2 = PhoneNumberField(blank=True, null=True, help_text='Digite o telefone secundário do chefe da família (opcional)', verbose_name='telefone secundário')
+    telefone1 = models.CharField(max_length=16, help_text='Digite o telefone principal do chefe da família', verbose_name='telefone principal')
+    telefone2 = models.CharField(max_length=16, blank=True, null=True, help_text='Digite o telefone secundário do chefe da família (opcional)', verbose_name='telefone secundário')
     data_cadastro = models.DateField(auto_now_add=True, verbose_name='data de cadastro')
 
     class Meta:
-        ordering = ['chefe_da_familia']
+        ordering = ['id']
         verbose_name = 'Família'
         verbose_name_plural = 'Famílias'
 
@@ -25,8 +25,8 @@ class Familia(models.Model):
 class IntegranteFamiliar(models.Model):
     chefe_da_familia = models.ForeignKey(Familia, on_delete=models.CASCADE, help_text='Selecione o chefe da família')
     nome = models.CharField(max_length=200, help_text='Digite o nome do integrante da família')
-    cpf = models.CharField(max_length=11, help_text='Digite o cpf do integrante da família')
-    telefone = PhoneNumberField(blank=True, null=True, help_text='Digite o telefone do integrante da família (00)0 0000-0000 (opcional)')
+    cpf = models.CharField(max_length=11, validators=[RegexValidator(regex="^[0-9]+$", message='Digite apenas números', code='nomatch'), MinLengthValidator(11)], help_text='Digite o cpf do integrante da família')
+    telefone = models.CharField(max_length=16, help_text='Digite o telefone do membro da família', verbose_name='telefone')
     data_cadastro = models.DateField(auto_now_add=True, verbose_name='data de cadastro')
 
     class Meta:
@@ -41,7 +41,7 @@ class IntegranteFamiliar(models.Model):
 class Representante(models.Model):
     nome = models.CharField(max_length=200, help_text='Digite o nome do representante da entidade')
     representante = models.ForeignKey(User, on_delete=models.CASCADE, help_text='Selecione o usuário representante')
-    cpf = models.CharField(max_length=11, help_text='Digite o cpf do representante da entidade')
+    cpf = models.CharField(max_length=11, validators=[RegexValidator(regex="^[0-9]+$", message='Digite apenas números', code='nomatch'), MinLengthValidator(11)], help_text='Digite o cpf do representante da entidade')
     data_cadastro = models.DateField(auto_now_add=True, verbose_name='data de cadastro')
 
     class Meta:
@@ -54,9 +54,9 @@ class Representante(models.Model):
 
 class Entidade(models.Model):
     nome_fantasia = models.CharField(max_length=200, help_text='Digite o nome-fantasia da entidade')
-    cnpj = models.CharField(max_length=14, help_text='Digite o cnpj da entidade')
+    cnpj = models.CharField(max_length=14, validators=[RegexValidator(regex="^[0-9]+$", message='Digite apenas números', code='nomatch'), MinLengthValidator(14)], help_text='Digite o cnpj da entidade')
     endereco = models.CharField(max_length=200, help_text='Digite o email da entidade', verbose_name = 'endereço')
-    telefone = PhoneNumberField(blank=True, null=True, help_text='Digite o telefone da entidade (00)0 0000-0000 (Opcional)')
+    telefone = models.CharField(max_length=16, blank=True, null=True, help_text='Digite o telefone da entidade (00)0 0000-0000 (Opcional)')
     email = models.EmailField(help_text='Digite o email da entidade')
     representante = models.ForeignKey(Representante, on_delete=models.CASCADE, help_text='Selecione o representante da entidade')
     data_cadastro = models.DateField(auto_now_add=True, verbose_name='data de cadastro')

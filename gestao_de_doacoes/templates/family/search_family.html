@@ -1,13 +1,13 @@
 {% extends "table_generic.html" %} 
 
 {% block table_title %}
-  Lista de <b>famílias</b>
+  Resultados da pesquisa
 {% endblock %}
 
 {% block table_search %}
-  <form action="{% url 'search_family' %}" method=GET>
+  <form action="{% url 'search_family' %}" method="GET">
     {% csrf_token %}
-    <input type="search" name="search_term" placeholder="Pesquisar familia..." required>
+    <input type="search" name="search_term" required placeholder="Pesquisar familia...">
     <button type="submit">
       <i class="fas fa-search"></i>
     </button>
@@ -15,7 +15,7 @@
 {% endblock %}
 
 {% block table_add_button %}
-  <a href="{% url 'create_family' %}" id="add-button" class="py-2 px-3">
+  <a id="add-button" class="py-2 px-3">
     <i class="fas fa-plus-square icon"></i>
     <b>Nova família</b>
   </a>
@@ -31,29 +31,24 @@
 {% block table_body %}
   {% if page %}
     {% for family in page %}
-      <tr>
-        <th scope="row">
-          {{ family.id }}
-        </th>
-        <td>
-          <a href="{% url 'family_details' family.pk %}">
-            {{ family.chefe_da_familia }}
-          </a>
-        </td>
-        <td>
-          {{ family.endereco }}
-        </td>
-        <td>
-          {{ family.telefone1 }}
-        </td>
-      </tr>
+      <th scope="row">
+        {{ family.id }}
+      </th>
+      <td>
+        <a href="{% url 'family_details' family.pk %}">
+          {{ family.chefe_da_familia }}
+        </a>
+      </td>
+      <td>
+        {{ family.endereco }}
+      </td>
+      <td>
+        {{ family.telefone1 }}
+      </td>
     {% endfor %}
-  {% else %}
-    <tr>
-      <td colspan="4">Não existem famílias cadastradas.</td>
-    </tr>
+    {% else %}
+      <td colspan="4">Não existem famílias com o parâmetro de pesquisa</td>
   {% endif %}
-  
 {% endblock %}
 
 {% block pagination %}
@@ -61,13 +56,13 @@
 
   <div>
     {% if page.has_previous %}
-      <a href="{% url 'family' %}?page={{ page.previous_page_number }}">
+      <a href="{% url 'search_family' %}?page={{ page.previous_page_number }}&search_term={{ search_term }}">
         <i class="fas fa-chevron-left"></i>
       </a>
     {% endif %}
       <p id="pagination">{{ page.number }}</p>
     {% if page.has_next %}
-      <a href="{% url 'family' %}?page={{ page.next_page_number }}">
+      <a href="{% url 'search_family' %}?page={{ page.next_page_number }}&search_term={{ search_term }}">
         <i class="fas fa-chevron-right"></i>
       </a>
     {% endif %}

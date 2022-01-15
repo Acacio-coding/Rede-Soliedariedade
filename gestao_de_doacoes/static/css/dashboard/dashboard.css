@@ -9,8 +9,19 @@
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
-  gap: 1.5em;
   color: rgba(255, 255, 255, 0.8);
+}
+
+@media screen and (max-width: 1400px) {
+  .count-item {
+    gap: 0.25em;
+  }
+}
+
+@media screen and (min-width: 1401px) {
+  .count-item {
+    gap: 1.25em;
+  }
 }
 
 .count-item .title {
@@ -45,7 +56,7 @@
     text-align: center;
   }
   .count-item .percentage-holder h4 {
-    font-size: 18px;
+    font-size: 16px;
   }
 }
 

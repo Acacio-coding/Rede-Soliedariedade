@@ -11,7 +11,7 @@ class FamiliaAdmin(admin.ModelAdmin):
 
 @admin.register(IntegranteFamiliar)
 class IntegranteFamiliarAdmin(admin.ModelAdmin):
-    list_display = ('chefe_da_familia', 'nome', 'telefone')
+    list_display = ('chefe_da_familia', 'nome')
     list_filter = ('chefe_da_familia__chefe_da_familia', 'nome')
 
 

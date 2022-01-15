@@ -77,14 +77,14 @@
 .content-container .title-column #search-holder form button {
   padding: 0.5em 1.25em;
   cursor: pointer;
-  background: #0c57cf;
+  background: #5c6670;
   color: rgba(255, 255, 255, 0.8);
   -webkit-transition: 100ms ease;
   transition: 100ms ease;
 }
 
-.content-container .title-column #search-holder form button:hover {
-  background: #0a47a9;
+.content-container .title-column #search-holder form button:hover, .content-container .title-column #search-holder form button:focus {
+  background: #505962;
   color: white;
 }
 
@@ -108,7 +108,7 @@
   }
 }
 
-.content-container .title-column #button-holder #add-button, .content-container .title-column #button-holder #remove-button, .content-container .title-column #button-holder #edit-button {
+.content-container .title-column #button-holder #add-button {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -117,12 +117,13 @@
           align-items: center;
   gap: 0.5em;
   cursor: pointer;
-  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  color: white;
   -webkit-transition: 100ms ease;
   transition: 100ms ease;
 }
 
-.content-container .title-column #button-holder #add-button .icon, .content-container .title-column #button-holder #remove-button .icon, .content-container .title-column #button-holder #edit-button .icon {
+.content-container .title-column #button-holder #add-button .icon {
   font-size: 20px;
 }
 
@@ -132,41 +133,19 @@
 
 .content-container .title-column #button-holder #add-button:hover, .content-container .title-column #button-holder #add-button:focus {
   background: #006600;
-  color: white;
-}
-
-.content-container .title-column #button-holder #edit-button {
-  background: orange;
-}
-
-.content-container .title-column #button-holder #edit-button:hover, .content-container .title-column #button-holder #edit-button:focus {
-  background: #d68b00;
-  color: white;
-}
-
-.content-container .title-column #button-holder #remove-button {
-  background: red;
-}
-
-.content-container .title-column #button-holder #remove-button:hover, .content-container .title-column #button-holder #remove-button:focus {
-  background: #3d0000;
-  color: white;
 }
 
 .content-container .content-column table tbody tr td a {
   cursor: pointer;
-  color: orange;
+  color: #000;
   text-decoration: none;
-  font-size: 18px;
-  -webkit-transition: 100ms ease;
-  transition: 100ms ease;
 }
 
 .content-container .content-column table tbody tr td a:hover {
-  color: #996300;
+  color: #454d54;
 }
 
-.content-container .content-column .pagination-holder {
+.content-container .pagination-holder {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -179,33 +158,35 @@
   color: rgba(255, 255, 255, 0.8);
 }
 
-.content-container .content-column .pagination-holder p {
+.content-container .pagination-holder p {
   line-height: 1;
-  padding: 0;
   margin: 0;
 }
 
-.content-container .content-column .pagination-holder div {
+.content-container .pagination-holder #pagination {
+  padding: 0.75em 1em;
+  background: #22262a;
+}
+
+.content-container .pagination-holder div {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  gap: 0.5em;
 }
 
-.content-container .content-column .pagination-holder div a {
+.content-container .pagination-holder div a {
   text-decoration: none;
   color: rgba(255, 255, 255, 0.8);
   background: #5c6670;
   -webkit-transition: 50ms ease;
   transition: 50ms ease;
-  padding: 0.5em 0.75em;
+  padding: 0.5em 1em;
 }
 
-.content-container .content-column .pagination-holder div a:hover, .content-container .content-column .pagination-holder div a:focus {
-  background: #22262a;
+.content-container .pagination-holder div a:hover, .content-container .pagination-holder div a:focus {
   color: white;
 }
 /*# sourceMappingURL=table.css.map */

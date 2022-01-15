@@ -8,7 +8,7 @@
 {% block content %}
   <div class="row h-100 p-3 content-container">
     <div class="col">
-      <div class="title-column bg-dark py-3 px-4 rounded-top">
+      <div class="title-column bg-dark py-3 px-4">
         <h4 id="table-title"> 
           {% block table_title %}
           {% endblock %}
@@ -21,14 +21,8 @@
         
   
         <div id="button-holder">
-          <button id="add-button" class="py-2 px-3 rounded">
-            <i class="fas fa-plus-square icon"></i>
-            
-            <b>
-              {% block table_add_button_text %}
-              {% endblock %}
-            </b>
-          </button>
+          {% block table_add_button %}
+          {% endblock %}
         </div>
       </div>
       
@@ -46,11 +40,11 @@
             {% endblock %}
           </tbody>
         </table>
-      
-        <div class="pagination-holder bg-dark rounded-bottom py-3 px-4">
-          {% block pagination %}
-          {% endblock %}
-        </div>
+      </div>
+
+      <div class="pagination-holder bg-dark py-3 px-4">
+        {% block pagination %}
+        {% endblock %}
       </div>
     </div>
   </div>

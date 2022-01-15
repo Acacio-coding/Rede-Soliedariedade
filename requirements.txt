@@ -1,3 +1,2 @@
 Django
 python-dotenv
-django-phonenumber-field[phonenumbers]
