@@ -1,6 +1,6 @@
 from django.db import models
 from django.urls import reverse
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator, MinLengthValidator
 from datetime import datetime, date
 
@@ -38,19 +38,10 @@ class IntegranteFamiliar(models.Model):
         return self.chefe_da_familia.chefe_da_familia
 
 
-class Representante(models.Model):
-    nome = models.CharField(max_length=200, help_text='Digite o nome do representante da entidade')
-    representante = models.ForeignKey(User, on_delete=models.CASCADE, help_text='Selecione o usuário representante')
-    cpf = models.CharField(max_length=11, validators=[RegexValidator(regex="^[0-9]+$", message='Digite apenas números', code='nomatch'), MinLengthValidator(11)], help_text='Digite o cpf do representante da entidade')
-    data_cadastro = models.DateField(auto_now_add=True, verbose_name='data de cadastro')
+class Usuario(AbstractUser):
+    cpf = models.CharField(max_length=11, validators=[RegexValidator(regex="^[0-9]+$", message='Digite apenas números', code='nomatch'), MinLengthValidator(11)])
+    telefone = models.CharField(max_length=16, blank=True, null=True, help_text='Digite o telefone do representante (00)0 0000-0000 (Opcional)')
 
-    class Meta:
-        ordering = ['nome']
-        verbose_name = 'Representante de entidade'
-        verbose_name_plural = 'Representantes de entidades'
-    
-    def __str__(self):
-        return self.representante.nome
 
 class Entidade(models.Model):
     nome_fantasia = models.CharField(max_length=200, help_text='Digite o nome-fantasia da entidade')
@@ -58,7 +49,7 @@ class Entidade(models.Model):
     endereco = models.CharField(max_length=200, help_text='Digite o email da entidade', verbose_name = 'endereço')
     telefone = models.CharField(max_length=16, blank=True, null=True, help_text='Digite o telefone da entidade (00)0 0000-0000 (Opcional)')
     email = models.EmailField(help_text='Digite o email da entidade')
-    representante = models.ForeignKey(Representante, on_delete=models.CASCADE, help_text='Selecione o representante da entidade')
+    representante = models.ForeignKey(Usuario, on_delete=models.CASCADE, help_text='Selecione o representante da entidade')
     data_cadastro = models.DateField(auto_now_add=True, verbose_name='data de cadastro')
     
     class Meta:
@@ -84,7 +75,7 @@ class Item(models.Model):
 
 class Doacao(models.Model):
     chefe_da_familia = models.ForeignKey(Familia, on_delete=models.CASCADE, help_text='Selecione o chefe da família')
-    usuario = models.ForeignKey(User, on_delete=models.CASCADE, help_text='Selecione o usuário representante', verbose_name="usuário")
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, help_text='Selecione o usuário representante', verbose_name="usuário")
     data = models.DateField(help_text='Informe a data da doação')
     justificativa = models.TextField(max_length=200, blank=True, null=True, help_text='Digite a justificativa da doação')
     data_cadastro = models.DateField(auto_now_add=True, verbose_name='data de cadastro')

@@ -1,7 +1,14 @@
 from django.contrib import admin
+from django.contrib.auth import admin as auth_admin
+from .models import Familia, IntegranteFamiliar, Entidade, Usuario, Item, ItensDoacao, Doacao
+from .forms import UserCreationForm, UserChangeForm
 
-# Register your models here.
-from gestao_de_doacoes.models import Familia, IntegranteFamiliar, Entidade, Representante, Item, ItensDoacao, Doacao
+@admin.register(Usuario)
+class UsuarioAdmin(auth_admin.UserAdmin):
+    form = UserChangeForm
+    add_form = UserCreationForm
+    model = Usuario
+
 
 @admin.register(Familia)
 class FamiliaAdmin(admin.ModelAdmin):
@@ -20,15 +27,7 @@ class EntidadeAdmin(admin.ModelAdmin):
     list_display = ('nome_fantasia', 'email', 'telefone')
     list_filter = ('nome_fantasia', 'email')
 
-
-@admin.register(Representante)
-class RepresentanteAdmin(admin.ModelAdmin):
-    list_display = ('nome', 'representante', 'cpf')
-    list_filter = ('entidade__nome_fantasia', 'nome', 'representante__username')
-
-
 admin.site.register(Item)
-
 
 @admin.register(ItensDoacao)
 class ItensDoacaoAdmin(admin.ModelAdmin):

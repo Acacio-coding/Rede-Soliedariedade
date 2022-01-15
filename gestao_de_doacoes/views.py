@@ -1,8 +1,7 @@
 from datetime import date, timedelta
-from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from django.shortcuts import render, redirect, get_object_or_404
-from gestao_de_doacoes.models import Familia, IntegranteFamiliar, Entidade, Representante, Item, Doacao, ItensDoacao
+from gestao_de_doacoes.models import Familia, IntegranteFamiliar, Entidade, Usuario, Item, Doacao, ItensDoacao
 from gestao_de_doacoes.forms import FamilyForm, FamilyMemberForm
 
 #dashboard.
@@ -13,7 +12,6 @@ def dashboard(request):
     families = Familia.objects.all()
     entities = Entidade.objects.all()
     donations = Doacao.objects.all()
-    users = User.objects.all()
 
     end = date.today().replace(day=1) - timedelta(days=1)
     start = date.today().replace(day=1) - timedelta(days=end.day)
@@ -25,7 +23,6 @@ def dashboard(request):
       'entity_lastmonth': entities.filter(data_cadastro__range=[start, end]).count(),
       'donation_count': donations.count,
       'donation_lastmonth': donations.filter(data_cadastro__range=[start, end]).count(),
-      'user_count': users.count,
     }
 
     return render(request, 'dashboard/dashboard.html', context)
@@ -34,12 +31,12 @@ def dashboard(request):
 def family(request):
     family = Familia.objects.all()
     family_paginator = Paginator(family, 10)
-    page_num = request.GET.get('page')
-    page = family_paginator.get_page(page_num)
+    page_num = request.GET.get('page', 1)
+    paginator = family_paginator.get_page(page_num)
 
     context = {
       'count': family_paginator.count,
-      'page': page,
+      'paginator': paginator,
     }
 
     return render(request, 'family/family.html', context)
@@ -50,13 +47,13 @@ def search_family(request):
 
         families = Familia.objects.filter(chefe_da_familia__contains=search_term) or Familia.objects.filter(endereco__contains=search_term) or Familia.objects.filter(telefone1__contains=search_term)
         family_paginator = Paginator(families, 10)
-        page_num = request.GET.get('page')
-        page = family_paginator.get_page(page_num)
-
+        page_num = request.GET.get('page', 1)
+        paginator = family_paginator.get_page(page_num)
+        
         context = {
           'search_term': search_term,
           'count': family_paginator.count,
-          'page': page,
+          'paginator': paginator,
         }
 
         return render(request, 'family/search_family.html', context)

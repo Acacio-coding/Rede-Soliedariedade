@@ -29,8 +29,8 @@
 {% endblock %}
 
 {% block table_body %}
-  {% if page %}
-    {% for family in page %}
+  {% if paginator %}
+    {% for family in paginator %}
       <tr>
         <th scope="row">
           {{ family.id }}
@@ -57,19 +57,41 @@
 {% endblock %}
 
 {% block pagination %}
-  <p>Página <b>{{ page.number }}</b> de <b>{{ page.paginator.num_pages }}</b></p>
+  <p>Mostrando de <b>{{ paginator.start_index }}</b> até <b>{{ paginator.end_index }}</b> de <b>{{ paginator.paginator.count }}</b> resultados</p>
 
-  <div>
-    {% if page.has_previous %}
-      <a href="{% url 'family' %}?page={{ page.previous_page_number }}">
-        <i class="fas fa-chevron-left"></i>
-      </a>
-    {% endif %}
-      <p id="pagination">{{ page.number }}</p>
-    {% if page.has_next %}
-      <a href="{% url 'family' %}?page={{ page.next_page_number }}">
-        <i class="fas fa-chevron-right"></i>
-      </a>
-    {% endif %}
-  </div>
+  {% if paginator.has_other_pages %}
+    <div>
+      {% if paginator.has_previous %}
+        <a class="activated" href="{% url 'family' %}?page={{ paginator.previous_page_number }}">
+          <i class="fas fa-chevron-left"></i>
+        </a>
+      {% else %}
+        <a class="disabled" href="#">
+          <i class="fas fa-chevron-left"></i>
+        </a>
+      {% endif %}
+
+      {% for page in paginator.paginator.page_range %}
+        {% if paginator.number == page %}
+          <a class="current" href="#">
+            {{ page }}
+          </a>
+        {% elif page > paginator.number|add:'-3' and page < paginator.number|add:'3' %}
+          <a class="activated" href="{% url 'family' %}?page={{ page }}">
+            {{ page }}
+          </a>         
+        {% endif %}
+      {% endfor %}
+
+      {% if paginator.has_next %}
+        <a class="activated" href="{% url 'family' %}?page={{ paginator.next_page_number }}">
+          <i class="fas fa-chevron-right"></i>
+        </a>
+      {% else %}
+        <a class="disabled" href="#">
+          <i class="fas fa-chevron-right"></i>
+        </a>
+      {% endif %}
+    </div>
+  {% endif %}
 {% endblock %}

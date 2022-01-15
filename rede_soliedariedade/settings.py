@@ -34,12 +34,15 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    #django
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    #local
     'gestao_de_doacoes.apps.GestaoDeDoacoesConfig',
 ]
 
@@ -127,6 +130,8 @@ STATIC_ROOT = BASE_DIR / 'static'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Phonenumber field
-PHONENUMBER_DB_FORMAT = 'NATIONAL'
-PHONENUMBER_DEFAULT_REGION = 'BR'
+# Auth User
+AUTH_USER_MODEL = 'gestao_de_doacoes.Usuario'
+
+#Django AllAuth
+LOGIN_REDIRECT_URL = "/"
