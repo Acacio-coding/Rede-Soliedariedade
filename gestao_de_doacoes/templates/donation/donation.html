@@ -1,15 +1,14 @@
-{% extends 'table_generic.html' %} 
+{% extends 'table_generic.html' %}
 
 {% block table_title %}
-  Lista de <b>famílias</b>
+  Lista de <b>doações</b>
 {% endblock %}
-
 
 {% block table_search %}
   {% if paginator.has_other_pages %}
-    <form action="{% url 'search_family' %}" method=GET>
+    <form action="{% url 'search_donation' %}" method=GET>
       {% csrf_token %}
-      <input type="search" name="search_term" placeholder="Pesquisar familia..." required>
+      <input type="search" name="search_term" placeholder="Pesquisar doação..." required>
       <button type="submit">
         <i class="fas fa-search"></i>
       </button>
@@ -17,44 +16,43 @@
   {% endif %}
 {% endblock %}
 
-
 {% block table_add_button %}
-  <a href="{% url 'create_family' %}" id="add-button" class="py-2 px-3">
+  <a href="{% url 'create_donation' %}" id="add-button" class="py-2 px-3">
     <i class="fas fa-plus-square icon"></i>
-    <b>Nova família</b>
+    <b>Nova doação</b>
   </a>
 {% endblock %}
 
 {% block table_head %}
   <th scope="col">ID</th>
   <th scope="col">Chefe da família</th>
-  <th scope="col">Endereço</th>
-  <th scope="col">Telefone principal</th>
+  <th scope="col">Data</th>
+  <th scope="col">Usuário</th>
 {% endblock %}
 
 {% block table_body %}
   {% if paginator %}
-    {% for family in paginator %}
+    {% for donation in paginator %}
       <tr>
         <th scope="row">
-          {{ family.id }}
+          {{ donation.id }}
         </th>
         <td>
-          <a href="{% url 'family_details' family.pk %}">
-            {{ family.chefe_da_familia }}
+          <a href="{% url 'donation_details' donation.pk %}">
+            {{ donation.chefe_da_familia.chefe_da_familia }}
           </a>
         </td>
         <td>
-          {{ family.endereco }}
+          {{ donation.data }}
         </td>
         <td>
-          {{ family.telefone1 }}
+          {{ donation.usuario.nome }}
         </td>
       </tr>
     {% endfor %}
   {% else %}
     <tr>
-      <td colspan="4">Não existem famílias cadastradas.</td>
+      <td colspan="4">Não existem doações cadastradas.</td>
     </tr>
   {% endif %}
   
@@ -70,7 +68,7 @@
   {% if paginator.has_other_pages %}
     <div>
       {% if paginator.has_previous %}
-        <a class="activated" href="{% url 'family' %}?page={{ paginator.previous_page_number }}">
+        <a class="activated" href="{% url 'donation' %}?page={{ paginator.previous_page_number }}">
           <i class="fas fa-chevron-left"></i>
         </a>
       {% else %}
@@ -85,14 +83,14 @@
             {{ page }}
           </a>
         {% elif page > paginator.number|add:'-3' and page < paginator.number|add:'3' %}
-          <a class="activated" href="{% url 'family' %}?page={{ page }}">
+          <a class="activated" href="{% url 'donation' %}?page={{ page }}">
             {{ page }}
           </a>         
         {% endif %}
       {% endfor %}
 
       {% if paginator.has_next %}
-        <a class="activated" href="{% url 'family' %}?page={{ paginator.next_page_number }}">
+        <a class="activated" href="{% url 'donation' %}?page={{ paginator.next_page_number }}">
           <i class="fas fa-chevron-right"></i>
         </a>
       {% else %}

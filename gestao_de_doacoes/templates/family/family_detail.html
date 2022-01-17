@@ -195,7 +195,8 @@
 {% endblock %}
 
 {% block script %}
-  <script type="text/javascript">
+  <!-- Remove/Create member animation -->
+  <script>
     const remove_family = document.querySelector("#remove-family");
     const remove_family_content_holder = document.querySelector("#remove-family-content-holder");
 
@@ -239,7 +240,8 @@
     }
   </script>
 
-  <script type="text/javascript">
+  <!-- Number formatter -->
+  <script>
     const numberFormat = (input) => {
       input = input.replace(/\D/g,'');
       const size = input.length;

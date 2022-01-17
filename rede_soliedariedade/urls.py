@@ -19,4 +19,6 @@ from django.contrib import admin
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('gestao_de_doacoes.urls')),
+    path('auth/', include('django.contrib.auth.urls')),
+    path('auth/', include('authentication.urls')),
 ]

@@ -1,14 +1,21 @@
 from datetime import date, timedelta
 from django.core.paginator import Paginator
+from gestao_de_doacoes.decorators import is_auth, allowed
 from django.shortcuts import render, redirect, get_object_or_404
-from gestao_de_doacoes.models import Familia, IntegranteFamiliar, Entidade, Usuario, Item, Doacao, ItensDoacao
-from gestao_de_doacoes.forms import FamilyForm, FamilyMemberForm
+from gestao_de_doacoes.models import Familia, IntegranteFamiliar, Entidade, Item, Doacao, ItensDoacao
+from authentication.models import Usuario
+from gestao_de_doacoes.forms import FamilyForm, FamilyMemberForm, DonationForm
 
 #dashboard.
+@is_auth
+@allowed(allowed_roles=['Usuário', 'Representante'])
 def index(request):
     return redirect('dashboard')
 
+@is_auth
+@allowed(allowed_roles=['Usuário', 'Representante'])
 def dashboard(request):
+    users = Usuario.objects.filter(groups__name='Usuário')
     families = Familia.objects.all()
     entities = Entidade.objects.all()
     donations = Doacao.objects.all()
@@ -17,6 +24,8 @@ def dashboard(request):
     start = date.today().replace(day=1) - timedelta(days=end.day)
     
     context = {
+      'user_count': users.count,
+      'user_lastmonth:': users.filter(date_joined__range=[start, end]).count(),
       'family_count': families.count,
       'family_lastmonth': families.filter(data_cadastro__range=[start, end]).count(),
       'entity_count': entities.count,
@@ -28,6 +37,8 @@ def dashboard(request):
     return render(request, 'dashboard/dashboard.html', context)
 
 #family
+@is_auth
+@allowed(allowed_roles=['Usuário', 'Representante'])
 def family(request):
     family = Familia.objects.all()
     family_paginator = Paginator(family, 10)
@@ -41,6 +52,8 @@ def family(request):
 
     return render(request, 'family/family.html', context)
 
+@is_auth
+@allowed(allowed_roles=['Usuário', 'Representante'])
 def search_family(request):
     if 'search_term' in request.GET and request.GET['search_term']:   
         search_term = request.GET.get('search_term')
@@ -60,6 +73,8 @@ def search_family(request):
     else:
         return redirect('family')
 
+@is_auth
+@allowed(allowed_roles=['Usuário', 'Representante'])
 def family_details(request, pk):
     family = get_object_or_404(Familia, pk=pk)
     members = IntegranteFamiliar.objects.filter(chefe_da_familia__exact=family.id)
@@ -94,7 +109,9 @@ def family_details(request, pk):
     }
         
     return render(request, 'family/family_detail.html', context)
-        
+
+@is_auth
+@allowed(allowed_roles=['Usuário', 'Representante'])    
 def create_family(request):
     form = FamilyForm()
 
@@ -106,11 +123,12 @@ def create_family(request):
 
     context = {
       'form': form,
-      'family': family,
     }
 
     return render(request, 'family/create_family.html', context)
 
+@is_auth
+@allowed(allowed_roles=['Usuário', 'Representante'])
 def member_details(request, pk_family, pk_member):
     family = get_object_or_404(Familia, pk=pk_family)
     member = get_object_or_404(IntegranteFamiliar, pk=pk_member)
@@ -136,3 +154,60 @@ def member_details(request, pk_family, pk_member):
     }
 
     return render(request, 'family/member/member_detail.html', context)
+
+#donation
+@is_auth
+@allowed(allowed_roles=['Usuário', 'Representante'])
+def donation(request):
+    donation = Doacao.objects.all()
+    donation_paginator = Paginator(donation, 10)
+    page_num = request.GET.get('page', 1)
+    paginator = donation_paginator.get_page(page_num)
+
+    context = {
+      'count': donation_paginator.count,
+      'paginator': paginator,
+    }
+
+    return render(request, 'donation/donation.html', context)
+
+@is_auth
+@allowed(allowed_roles=['Usuário', 'Representante'])
+def search_donation(request):
+    if 'search_term' in request.GET and request.GET['search_term']:   
+        search_term = request.GET.get('search_term')
+
+        donations = Doacao.objects.filter(chefe_da_familia__chefe_da_familia__contains=search_term) or Doacao.objects.filter(usuario__nome__contains=search_term) or Doacao.objects.filter(data__contains=search_term) or Doacao.objects.filter(justificativa__contains=search_term)
+        donation_paginator = Paginator(donations, 10)
+        page_num = request.GET.get('page', 1)
+        paginator = donation_paginator.get_page(page_num)
+        
+        context = {
+          'search_term': search_term,
+          'count': donation_paginator.count,
+          'paginator': paginator,
+        }
+
+        return render(request, 'donation/search_donation.html', context)
+    else:
+        return redirect('donation')
+
+@is_auth
+@allowed(allowed_roles=['Usuário', 'Representante'])    
+def create_donation(request):
+    form = DonationForm()
+
+    if request.method == 'POST':
+        form = DonationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('donation')
+
+    context = {
+      'form': form,
+    }
+
+    return render(request, 'donation/create_donation.html', context)
+
+def donation_details(request, pk):
+    return render(request, 'donation/donation_detail.html')

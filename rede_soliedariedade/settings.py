@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     #local
-    'gestao_de_doacoes.apps.GestaoDeDoacoesConfig',
+    'gestao_de_doacoes',
+    'authentication',
 ]
 
 MIDDLEWARE = [
@@ -131,7 +132,4 @@ STATIC_ROOT = BASE_DIR / 'static'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Auth User
-AUTH_USER_MODEL = 'gestao_de_doacoes.Usuario'
-
-#Django AllAuth
-LOGIN_REDIRECT_URL = "/"
+AUTH_USER_MODEL = 'authentication.Usuario'

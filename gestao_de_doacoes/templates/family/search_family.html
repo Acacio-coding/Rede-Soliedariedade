@@ -52,7 +52,11 @@
 {% endblock %}
 
 {% block pagination %}
+  {% if paginator.has_other_pages %}
   <p>Mostrando de <b>{{ paginator.start_index }}</b> até <b>{{ paginator.end_index }}</b> de <b>{{ paginator.paginator.count }}</b> resultados</p>
+  {% else %}
+  <p><b>{{ paginator.paginator.count }}</b> resultados</p>
+  {% endif %}
 
   {% if paginator.has_other_pages %}
     <div>

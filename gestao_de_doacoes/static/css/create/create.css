@@ -1,5 +1,8 @@
+.root-container {
+  overflow-y: auto;
+}
+
 .root-container .title-holder {
-  margin-top: 2.5em;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;

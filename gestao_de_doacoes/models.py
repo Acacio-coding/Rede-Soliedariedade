@@ -1,6 +1,5 @@
 from django.db import models
-from django.urls import reverse
-from django.contrib.auth.models import AbstractUser
+from authentication.models import Usuario
 from django.core.validators import RegexValidator, MinLengthValidator
 from datetime import datetime, date
 
@@ -36,11 +35,6 @@ class IntegranteFamiliar(models.Model):
 
     def __str__(self):
         return self.chefe_da_familia.chefe_da_familia
-
-
-class Usuario(AbstractUser):
-    cpf = models.CharField(max_length=11, validators=[RegexValidator(regex="^[0-9]+$", message='Digite apenas números', code='nomatch'), MinLengthValidator(11)])
-    telefone = models.CharField(max_length=16, blank=True, null=True, help_text='Digite o telefone do representante (00)0 0000-0000 (Opcional)')
 
 
 class Entidade(models.Model):

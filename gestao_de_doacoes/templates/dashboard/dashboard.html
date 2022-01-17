@@ -6,21 +6,23 @@
 {% endblock %}
 
 {% block content %}
-  <div class="row p-3">
-    <!-- <div class="col bg-dark m-1 p-3 count-item">
-      <h3 class="title">Usuários</h3>
-      <div class="percentage-holder">
-        <h4 class="" id="user-percentage">+20.5%</h4>
-        <h4>em relação ao último mês.</h4>
-      </div>
-     
+  {% if user.is_representante or user.is_superuser %}
+    <div class="row p-3">
+      <div class="col bg-dark m-1 p-3 count-item">
+        <h3 class="title">Usuários</h3>
+        <div class="percentage-holder">
+          <h4 class="" id="user-percentage"></h4>
+          <h4>em relação ao último mês.</h4>
+        </div>
+      
 
-      <div class="info-holder">
-        <i class="fas fa-user icon"></i>
-        <div class="counter" id="user-counter">
+        <div class="info-holder">
+          <i class="fas fa-user icon"></i>
+          <div class="counter" id="user-counter">
+          </div>
         </div>
       </div>
-    </div> -->
+  {% endif %}
 
     <div class="col bg-dark m-1 p-3 count-item">
       <h3 class="title">Entidades</h3>
@@ -70,9 +72,13 @@
 {% endblock %} 
 
 {% block script %}
+  <!-- Apex charts  -->
   <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-  <script type="text/javascript">
-    //const userCounter = document.querySelector("#user-counter")
+
+  <!-- Counters -->
+  <script>
+    const userCounter = document.querySelector("#user-counter")
+    const userPercentage = document.querySelector("#user-percentage")
     const entityCounter = document.querySelector("#entity-counter");
     const entityPercentage = document.querySelector("#entity-percentage")
     const familyCounter = document.querySelector("#family-counter");
@@ -100,10 +106,11 @@
     window.onload = () => {
       const start = 0;
 
-      /* const users = {
+      const users = {
         counter: userCounter,
         end: "{{ user_count }}",
-      } */
+        last_month: "{{ user_lastmonth }}",
+      }
 
       const entities = {
         counter: entityCounter,
@@ -123,11 +130,12 @@
         last_month: "{{ donation_lastmonth }}",
       }
 
-      //count(start, users.end, users.counter);
+      count(start, users.end, users.counter);
       count(start, entities.end, entities.counter);
       count(start, families.end, families.counter);
       count(start, donations.end, donations.counter);
 
+      userPercentage.innerHTML = getPercentage(userPercentage, users.last_month, users.end)
       entityPercentage.innerHTML = getPercentage(entityPercentage, entities.last_month, entities.end) 
       familyPercentage.innerHTML = getPercentage(familyPercentage, families.last_month, families.end) 
       donationPercentage.innerHTML = getPercentage(donationPercentage, donations.last_month, donations.end) 

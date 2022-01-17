@@ -56,7 +56,8 @@
 {% endblock %}
 
 {% block script %}
-  <script type="text/javascript">
+  <!-- Number formatter -->
+  <script>
     const numberFormat = (input) => {
       input = input.replace(/\D/g,'');
       const size = input.length;

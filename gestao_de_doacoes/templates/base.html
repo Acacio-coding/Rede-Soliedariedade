@@ -84,7 +84,7 @@
             <hr />
 
             <li class="nav-item" id="doacoes-item">
-              <a class="nav-link" id="doacoes-link" href="">
+              <a class="nav-link" id="doacoes-link" href="{% url 'donation' %}">
                 <div>
                   <i class="fas fa-hand-holding-usd" id="doacoes-icon"></i>
                 </div>
@@ -97,36 +97,39 @@
             </li>
             <hr />
 
-            <li class="nav-item" id="entidades-item">
-              <a class="nav-link" id="entidades-link" href="">
-                <div>
-                  <i class="fas fa-building" id="entidades-icon"></i>
-                </div>
-                Entidades
-              </a>
-              <i
-                class="fas fa-chevron-right icon-inactive"
-                id="entidades-arrow-icon"
-              ></i>
-            </li>
-            <hr />
+            {% if user.is_superuser or user.is_representante %}
+              <li class="nav-item" id="entidades-item">
+                <a class="nav-link" id="entidades-link" href="">
+                  <div>
+                    <i class="fas fa-building" id="entidades-icon"></i>
+                  </div>
+                  Entidades
+                </a>
+                <i
+                  class="fas fa-chevron-right icon-inactive"
+                  id="entidades-arrow-icon"
+                ></i>
+              </li>
+              <hr />
+            
 
-            <li class="nav-item" id="usuario-item">
-              <a class="nav-link" id="usuario-link" href="">
-                <div>
-                  <i class="fas fa-user" id="usuario-icon"></i>
-                </div>
-                Usuário
-              </a>
-              <i
-                class="fas fa-chevron-right icon-inactive"
-                id="usuario-arrow-icon"
-              ></i>
-            </li>
-            <hr />
+              <li class="nav-item" id="usuario-item">
+                <a class="nav-link" id="usuario-link" href="">
+                  <div>
+                    <i class="fas fa-user" id="usuario-icon"></i>
+                  </div>
+                  Usuários
+                </a>
+                <i
+                  class="fas fa-chevron-right icon-inactive"
+                  id="usuario-arrow-icon"
+                ></i>
+              </li>
+              <hr />
+            {% endif %}
 
             <li class="nav-item">
-              <a class="nav-link" href="">
+              <a class="nav-link" href="{% url 'logout' %}">
                 <div>
                   <i class="fas fa-sign-out-alt"></i>
                 </div>

@@ -1,14 +1,5 @@
 from django.contrib import admin
-from django.contrib.auth import admin as auth_admin
-from .models import Familia, IntegranteFamiliar, Entidade, Usuario, Item, ItensDoacao, Doacao
-from .forms import UserCreationForm, UserChangeForm
-
-@admin.register(Usuario)
-class UsuarioAdmin(auth_admin.UserAdmin):
-    form = UserChangeForm
-    add_form = UserCreationForm
-    model = Usuario
-
+from .models import Familia, IntegranteFamiliar, Entidade, Item, ItensDoacao, Doacao
 
 @admin.register(Familia)
 class FamiliaAdmin(admin.ModelAdmin):
