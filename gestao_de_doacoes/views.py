@@ -1,3 +1,4 @@
+import json
 from datetime import date, timedelta
 from django.core.paginator import Paginator
 from gestao_de_doacoes.decorators import is_auth, allowed
@@ -177,7 +178,7 @@ def search_donation(request):
     if 'search_term' in request.GET and request.GET['search_term']:   
         search_term = request.GET.get('search_term')
 
-        donations = Doacao.objects.filter(chefe_da_familia__chefe_da_familia__contains=search_term) or Doacao.objects.filter(usuario__nome__contains=search_term) or Doacao.objects.filter(data__contains=search_term) or Doacao.objects.filter(justificativa__contains=search_term)
+        donations = Doacao.objects.filter(chefe_da_familia__chefe_da_familia__contains=search_term) or Doacao.objects.filter(usuario__first_name__contains=search_term) or Doacao.objects.filter(data__contains=search_term) or Doacao.objects.filter(justificativa__contains=search_term)
         donation_paginator = Paginator(donations, 10)
         page_num = request.GET.get('page', 1)
         paginator = donation_paginator.get_page(page_num)
@@ -195,16 +196,30 @@ def search_donation(request):
 @is_auth
 @allowed(allowed_roles=['Usuário', 'Representante'])    
 def create_donation(request):
-    form = DonationForm()
+    form_donation = DonationForm()
+    families = Familia.objects.all()
+    users = Usuario.objects.filter(groups__name='Usuário')
+    items = Item.objects.all()
 
     if request.method == 'POST':
-        form = DonationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('donation')
+        form_donation = DonationForm(request.POST)
+        savedModel = None
+        if form_donation.is_valid():
+            savedModel = form_donation.save()
 
+        recieved_items = json.loads(request.POST.get('selectedItems'))
+
+        for element in recieved_items:
+            item_found = get_object_or_404(Item, pk=element['item'])
+            to_create = ItensDoacao.objects.create(doacao=savedModel, item=item_found, quantidade=element['quantidade'])
+
+        return redirect('donation')    
+    
     context = {
-      'form': form,
+      'form_donation': form_donation,
+      'families': families,
+      'users': users,
+      'items': items,
     }
 
     return render(request, 'donation/create_donation.html', context)

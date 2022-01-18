@@ -67,15 +67,19 @@
 }
 
 .content-container .title-column #search-holder form input {
-  padding: 0.5em 0.75em;
+  padding: 0.25em 0.5em !important;
+  border-radius: 0 !important;
+  border: none !important;
 }
 
 .content-container .title-column #search-holder form input:focus {
-  outline: none;
+  outline: none !important;
+  -webkit-box-shadow: inset 0 -1px 0 #ddd !important;
+          box-shadow: inset 0 -1px 0 #ddd !important;
 }
 
 .content-container .title-column #search-holder form button {
-  padding: 0.5em 1.25em;
+  padding: 0.25em 1em;
   cursor: pointer;
   background: #5c6670;
   color: rgba(255, 255, 255, 0.8);

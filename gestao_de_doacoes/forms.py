@@ -19,9 +19,3 @@ class DonationForm(ModelForm):
     class Meta:
         model = Doacao
         fields = '__all__'
-
-
-class ItensDoacaoForm(ModelForm):
-    class Meta:
-        model = ItensDoacao
-        fields = '__all__'

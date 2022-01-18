@@ -9,7 +9,7 @@
   {% if paginator.has_other_pages %}
     <form action="{% url 'search_family' %}" method=GET>
       {% csrf_token %}
-      <input type="search" name="search_term" placeholder="Pesquisar familia..." required>
+      <input class="form-control" type="search" name="search_term" placeholder="Pesquisar familia..." required>
       <button type="submit">
         <i class="fas fa-search"></i>
       </button>

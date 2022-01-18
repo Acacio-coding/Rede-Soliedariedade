@@ -89,7 +89,7 @@ class ItensDoacao(models.Model):
     quantidade = models.PositiveIntegerField(help_text='Digite a quantidade do item selecionado')
     
     class Meta:
-        ordering = []
+        ordering = ['doacao']
         verbose_name = 'Item de doação'
         verbose_name_plural = 'Itens de doações'
     

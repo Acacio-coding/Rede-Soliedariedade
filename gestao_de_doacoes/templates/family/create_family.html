@@ -9,7 +9,7 @@
   {% csrf_token %}
   <div>
     <label for="chefe_da_familia"><b>Nome</b></label>
-    <input type="text" id="chefe_da_familia" name="chefe_da_familia" placeholder="Nome do chefe da família">
+    <input class="form-control" type="text" id="chefe_da_familia" name="chefe_da_familia" placeholder="Nome do chefe da família">
     {% for error in form.chefe_da_familia.errors %}
       <small class="text-danger">{{ error }}</small>
     {% endfor %}
@@ -17,7 +17,7 @@
   
   <div>
     <label for="cpf"><b>CPF</b></label>
-    <input type="cpf" id="cpf" name="cpf" placeholder="CPF do chefe da família" maxlength="11">
+    <input class="form-control" type="cpf" id="cpf" name="cpf" placeholder="CPF do chefe da família" maxlength="11">
     {% for error in form.cpf.errors %}
       <small class="text-danger">{{ error }}</small>
     {% endfor %}
@@ -25,7 +25,7 @@
 
   <div>
     <label for="endereco"><b>Endereço</b></label>
-    <input type="text" id="endereco" name="endereco" placeholder="Endereço da família">
+    <input class="form-control" type="text" id="endereco" name="endereco" placeholder="Endereço da família">
     {% for error in form.endereco.errors %}
       <small class="text-danger">{{ error }}</small>
     {% endfor %}
@@ -33,7 +33,7 @@
 
   <div>
     <label for="telefone1"><b>Telefone principal</b></label>
-    <input type="text" id="telefone1" name="telefone1" maxlength="16" oninput="this.value = numberFormat(this.value)" placeholder="Telefone principal do chefe da família">
+    <input class="form-control" type="text" id="telefone1" name="telefone1" maxlength="16" oninput="this.value = numberFormat(this.value)" placeholder="Telefone principal do chefe da família">
     {% for error in form.telefone1.errors %}
       <small class="text-danger">{{ error }}</small>
     {% endfor %}
@@ -41,7 +41,7 @@
 
   <div>
     <label for="telefone2"><b>Telefone secundário</b> (opcional)</label>
-    <input type="text" id="telefone2" name="telefone2" maxlength="16" oninput="this.value = numberFormat(this.value)" placeholder="Telefone secundário do chefe da família">
+    <input class="form-control" type="text" id="telefone2" name="telefone2" maxlength="16" oninput="this.value = numberFormat(this.value)" placeholder="Telefone secundário do chefe da família">
     {% for error in form.telefone2.errors %}
       <small class="text-danger">{{ error }}</small>
     {% endfor %}

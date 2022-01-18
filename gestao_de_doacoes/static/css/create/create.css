@@ -103,10 +103,19 @@
 }
 
 .root-container .content-holder form div input {
-  width: 100%;
-  padding: 0.3em 0.5em;
-  border: solid 1px #c7ccd1;
-  font-size: 15px;
+  width: 100% !important;
+  padding: 0.3em 0.5em !important;
+  border: solid 1px #c7ccd1 !important;
+  border-radius: 0 !important;
+  font-size: 15px !important;
+}
+
+.root-container .content-holder form div select {
+  padding: 0.3em 0.5em !important;
+  height: 34px !important;
+  border-radius: 0 !important;
+  border: solid 1px #c7ccd1 !important;
+  font-size: 15px !important;
 }
 
 .root-container .content-holder form .button-holder {
@@ -123,9 +132,7 @@
 }
 
 .root-container .content-holder form .button-holder #save-button {
-  background: #0059ff;
-  color: #fff;
-  width: 25%;
+  width: 100%;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -137,22 +144,11 @@
           align-items: center;
   gap: 0.5em;
   cursor: pointer;
-  color: white;
   -webkit-transition: 100ms ease;
   transition: 100ms ease;
 }
 
-@media screen and (max-width: 500px) {
-  .root-container .content-holder form .button-holder #save-button {
-    width: 100%;
-  }
-}
-
 .root-container .content-holder form .button-holder #save-button .icon {
   font-size: 20px;
-}
-
-.root-container .content-holder form .button-holder #save-button:hover {
-  background: #003699;
 }
 /*# sourceMappingURL=create.css.map */

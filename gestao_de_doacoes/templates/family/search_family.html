@@ -7,7 +7,7 @@
 {% block table_search %}
   <form action="{% url 'search_family' %}" method="GET">
     {% csrf_token %}
-    <input type="search" name="search_term" required placeholder="Pesquisar familia...">
+    <input class="form-control" type="search" name="search_term" required placeholder="Pesquisar familia...">
     <button type="submit">
       <i class="fas fa-search"></i>
     </button>

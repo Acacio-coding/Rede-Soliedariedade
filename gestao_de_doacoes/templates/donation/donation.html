@@ -8,7 +8,7 @@
   {% if paginator.has_other_pages %}
     <form action="{% url 'search_donation' %}" method=GET>
       {% csrf_token %}
-      <input type="search" name="search_term" placeholder="Pesquisar doação..." required>
+      <input class="form-control" type="search" name="search_term" placeholder="Pesquisar doação..." required>
       <button type="submit">
         <i class="fas fa-search"></i>
       </button>
@@ -46,7 +46,7 @@
           {{ donation.data }}
         </td>
         <td>
-          {{ donation.usuario.nome }}
+          {{ donation.usuario.first_name }}
         </td>
       </tr>
     {% endfor %}
