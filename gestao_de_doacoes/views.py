@@ -6,7 +6,8 @@ from gestao_de_doacoes.decorators import is_auth, allowed
 from django.shortcuts import render, redirect, get_object_or_404
 from gestao_de_doacoes.models import Familia, IntegranteFamiliar, Entidade, Item, Doacao, ItensDoacao
 from authentication.models import Usuario
-from gestao_de_doacoes.forms import FamilyForm, FamilyMemberForm, DonationForm
+from gestao_de_doacoes.forms import FamilyForm, FamilyMemberForm, DonationForm, EntityForm, UserForm, ChangeUser
+from django.contrib.auth.models import Group
 
 #dashboard.
 @is_auth
@@ -40,7 +41,7 @@ def dashboard(request):
 
 #family
 @is_auth
-@allowed(allowed_roles=['Usuário', 'Representante'], currentPage='family')
+@allowed(allowed_roles=['Usuário', 'Representante'], currentPage='dashboard')
 def family(request):
     family = Familia.objects.all()
     family_paginator = Paginator(family, 10)
@@ -55,7 +56,7 @@ def family(request):
     return render(request, 'family/family.html', context)
 
 @is_auth
-@allowed(allowed_roles=['Usuário', 'Representante'], currentPage='search_family')
+@allowed(allowed_roles=['Usuário', 'Representante'], currentPage='dashboard')
 def search_family(request):
     if 'search_term' in request.GET and request.GET['search_term']:   
         search_term = request.GET.get('search_term')
@@ -76,7 +77,7 @@ def search_family(request):
         return redirect('family')
 
 @is_auth
-@allowed(allowed_roles=['Usuário', 'Representante'], currentPage='family_details')
+@allowed(allowed_roles=['Usuário', 'Representante'], currentPage='dashboard')
 def family_details(request, pk):
     family = get_object_or_404(Familia, pk=pk)
     members = IntegranteFamiliar.objects.filter(chefe_da_familia__exact=family.id)
@@ -113,7 +114,7 @@ def family_details(request, pk):
     return render(request, 'family/family_detail.html', context)
 
 @is_auth
-@allowed(allowed_roles=['Usuário'], currentPage='create_family')    
+@allowed(allowed_roles=['Usuário'], currentPage='dashboard')    
 def create_family(request):
     form = FamilyForm()
 
@@ -130,7 +131,7 @@ def create_family(request):
     return render(request, 'family/create_family.html', context)
 
 @is_auth
-@allowed(allowed_roles=['Usuário', 'Representante'], currentPage='member_details')
+@allowed(allowed_roles=['Usuário', 'Representante'], currentPage='dashboard')
 def member_details(request, pk_family, pk_member):
     family = get_object_or_404(Familia, pk=pk_family)
     member = get_object_or_404(IntegranteFamiliar, pk=pk_member)
@@ -159,7 +160,7 @@ def member_details(request, pk_family, pk_member):
 
 #donation
 @is_auth
-@allowed(allowed_roles=['Usuário', 'Representante'], currentPage='donation')
+@allowed(allowed_roles=['Usuário', 'Representante'], currentPage='dashboard')
 def donation(request):
     donation = Doacao.objects.all()
     donation_paginator = Paginator(donation, 10)
@@ -174,7 +175,7 @@ def donation(request):
     return render(request, 'donation/donation.html', context)
 
 @is_auth
-@allowed(allowed_roles=['Usuário', 'Representante'], currentPage='search_donation')
+@allowed(allowed_roles=['Usuário', 'Representante'], currentPage='dashboard')
 def search_donation(request):
     if 'search_term' in request.GET and request.GET['search_term']:   
         search_term = request.GET.get('search_term')
@@ -195,7 +196,7 @@ def search_donation(request):
         return redirect('donation')
 
 @is_auth
-@allowed(allowed_roles=['Usuário'], currentPage='donation')    
+@allowed(allowed_roles=['Usuário'], currentPage='dashboard')    
 def create_donation(request):
     form_donation = DonationForm()
     families = Familia.objects.all()
@@ -226,7 +227,7 @@ def create_donation(request):
     return render(request, 'donation/create_donation.html', context)
 
 @is_auth
-@allowed(allowed_roles=['Usuário', 'Representante'], currentPage='donation') 
+@allowed(allowed_roles=['Usuário', 'Representante'], currentPage='dashboard') 
 def donation_details(request, pk):
     donation = get_object_or_404(Doacao, pk=pk)
     families = Familia.objects.all()
@@ -270,3 +271,174 @@ def donation_details(request, pk):
     }
 
     return render(request, 'donation/donation_detail.html', context)
+
+#entity
+@is_auth
+@allowed(allowed_roles=['Representante'], currentPage='dashboard')
+def entity(request):
+    entity = Entidade.objects.all()
+    entity_paginator = Paginator(entity, 10)
+    page_num = request.GET.get('page', 1)
+    paginator = entity_paginator.get_page(page_num)
+
+    context = {
+      'count': entity_paginator.count,
+      'paginator': paginator,
+    }
+
+    return render(request, 'entity/entity.html', context)
+
+@is_auth
+@allowed(allowed_roles=['Representante'], currentPage='dashboard')
+def search_entity(request):
+    if 'search_term' in request.GET and request.GET['search_term']:   
+        search_term = request.GET.get('search_term')
+
+        entities = Entidade.objects.filter(nome_fantasia__contains=search_term) | Entidade.objects.filter(endereco__contains=search_term) | Entidade.objects.filter(representante__first_name__contains=search_term)
+        entity_paginator = Paginator(entities, 10)
+        page_num = request.GET.get('page', 1)
+        paginator = entity_paginator.get_page(page_num)
+        
+        context = {
+          'search_term': search_term,
+          'count': entity_paginator.count,
+          'paginator': paginator,
+        }
+
+        return render(request, 'entity/search_entity.html', context)
+    else:
+        return redirect('entity')
+
+@is_auth
+@allowed(allowed_roles=['Representante'], currentPage='dashboard')    
+def create_entity(request):
+    form = EntityForm()
+    users = Usuario.objects.filter(groups__name='Representante')
+
+    if request.method == 'POST':
+        form = EntityForm(request.POST)
+        if form.is_valid():
+            form.save()
+
+        return redirect('entity')    
+    
+    context = {
+      'form': form,
+      'users': users,
+    }
+
+    return render(request, 'entity/create_entity.html', context)
+
+@is_auth
+@allowed(allowed_roles=['Representante'], currentPage='family_details')
+def entity_details(request, pk):
+    entity = get_object_or_404(Entidade, pk=pk)
+    form = EntityForm()
+    
+    if request.method == 'POST':
+        if request.POST.get('update'):
+            form = EntityForm(request.POST)
+            if form.is_valid():
+                entity.nome_fantasia = request.POST.get('nome_fantasia')
+                entity.cnpj = request.POST.get('cnpj')
+                entity.endereco = request.POST.get('endereco')
+                entity.telefone = request.POST.get('telefone')
+                entity.representante = get_object_or_404(Usuario, pk=request.POST.get('representante'))
+                entity.save()
+                return redirect('entity_details', pk=pk)
+        elif request.POST.get('remove'):
+            entity.delete()
+            return redirect('entity')
+
+    context = {
+      'entity': entity,
+      'form': form,
+    }
+        
+    return render(request, 'entity/entity_detail.html', context)
+
+#user
+@is_auth
+@allowed(allowed_roles=['Representante'], currentPage='dashboard')
+def user(request):
+    users = Usuario.objects.filter(groups__name='Usuário')
+    users_paginator = Paginator(users, 10)
+    page_num = request.GET.get('page', 1)
+    paginator = users_paginator.get_page(page_num)
+
+    context = {
+      'count': users_paginator.count,
+      'paginator': paginator,
+    }
+
+    return render(request, 'user/user.html', context)
+
+@is_auth
+@allowed(allowed_roles=['Representante'], currentPage='dashboard')
+def search_user(request):
+    if 'search_term' in request.GET and request.GET['search_term']:   
+        search_term = request.GET.get('search_term')
+
+        users = Usuario.objects.filter(first_name__contains=search_term) | Usuario.objects.filter(last_name__contains=search_term) | Usuario.objects.filter(telefone__contains=search_term)
+        users_paginator = Paginator(users, 10)
+        page_num = request.GET.get('page', 1)
+        paginator = users_paginator.get_page(page_num)
+        
+        context = {
+          'search_term': search_term,
+          'count': users_paginator.count,
+          'paginator': paginator,
+        }
+
+        return render(request, 'user/search_user.html', context)
+    else:
+        return redirect('user')
+
+@is_auth
+@allowed(allowed_roles=['Representante'], currentPage='dashboard')    
+def create_user(request):
+    form = UserForm()
+
+    if request.method == 'POST':
+        form = UserForm(request.POST)
+        if form.is_valid():
+            created_user = form.save()
+            created_user.groups.add(Group.objects.get(name='Usuário'))
+
+        return redirect('user')    
+    
+    context = {
+      'form': form,
+    }
+
+    return render(request, 'user/create_user.html', context)
+
+@is_auth
+@allowed(allowed_roles=['Representante'], currentPage='dashboard')
+def user_details(request, pk):
+    user = get_object_or_404(Usuario, pk=pk)
+    form = ChangeUser()
+    
+    if request.method == 'POST':
+        if request.POST.get('update'):
+            form = ChangeUser(request.POST, instance=user)
+            if form.is_valid():
+                user.username = request.POST.get('username')
+                user.first_name = request.POST.get('first_name')
+                user.last_name = request.POST.get('first_name')
+                user.cpf = request.POST.get('cpf')
+                user.email = request.POST.get('email')
+                user.telefone = request.POST.get('telefone')
+                user.save()
+
+            return redirect('user_details', pk=pk)
+        elif request.POST.get('remove'):
+            user.delete()
+            return redirect('user')
+
+    context = {
+      'user': user,
+      'form': form,
+    }
+        
+    return render(request, 'user/user_detail.html', context)

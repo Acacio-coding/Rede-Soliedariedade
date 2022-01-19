@@ -17,7 +17,7 @@
   
   <div>
     <label for="cpf"><b>CPF</b></label>
-    <input class="form-control" type="cpf" id="cpf" name="cpf" placeholder="CPF do chefe da família" maxlength="11">
+    <input class="form-control" type="text" id="cpf" name="cpf" placeholder="CPF do chefe da família" maxlength="11" oninput="this.value = onlyNumber(this.value)">
     {% for error in form.cpf.errors %}
       <small class="text-danger">{{ error }}</small>
     {% endfor %}
@@ -47,7 +47,7 @@
     {% endfor %}
   </div>
 
-  <div class="button-holder py-3">
+  <div class="button-holder">
     <button type="submit" id="save-button" class="btn-primary py-2 px-2">
       <i class="fas fa-save icon"></i>
       <b>Salvar</b>
@@ -56,6 +56,13 @@
 {% endblock %}
 
 {% block script %}
+  <script>
+    const onlyNumber = (input) => {
+      input = input.replace(/\D/g,'');
+      return input;
+    }
+  </script>
+
   <!-- Number formatter -->
   <script>
     const numberFormat = (input) => {

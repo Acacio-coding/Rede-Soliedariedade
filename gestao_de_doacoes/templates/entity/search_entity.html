@@ -1,61 +1,60 @@
-{% extends 'table_generic.html' %}
-{% load auth_extras %}
+{% extends 'table_generic.html' %} 
 
 {% block table_title %}
-  Lista de <b>doações</b>
+  Resultados da pesquisa
 {% endblock %}
+
 
 {% block table_search %}
-  {% if paginator.has_other_pages %}
-    <form action="{% url 'search_donation' %}" method=GET>
-      {% csrf_token %}
-      <input class="form-control" type="search" name="search_term" placeholder="Pesquisar doação..." required>
-      <button type="submit">
-        <i class="fas fa-search"></i>
-      </button>
-    </form>
-  {% endif %}
+  <form action="{% url 'search_entity' %}" method="GET">
+    {% csrf_token %}
+    <input class="form-control" type="search" name="search_term" required placeholder="Pesquisar entidade...">
+    <button type="submit">
+      <i class="fas fa-search"></i>
+    </button>
+  </form>
 {% endblock %}
 
-{% block table_add_button %}
-  {% if request.user|has_group:"Usuário" or request.user.is_superuser %}
+% block table_add_button %}
+  {% if request.user|has_group:"Representante" or request.user.is_superuser %}
   <a href="{% url 'create_donation' %}" id="add-button" class="py-2 px-3">
     <i class="fas fa-plus-square icon"></i>
-    <b>Nova doação</b>
+    <b>Nova entidade</b>
   </a>
   {% endif %}
 {% endblock %}
 
+
 {% block table_head %}
   <th scope="col">ID</th>
-  <th scope="col">Chefe da família</th>
-  <th scope="col">Data</th>
-  <th scope="col">Cadastrada por</th>
+  <th scope="col">Nome fantasia</th>
+  <th scope="col">Endereco</th>
+  <th scope="col">Representante</th>
 {% endblock %}
 
 {% block table_body %}
   {% if paginator %}
-    {% for donation in paginator %}
+    {% for entity in paginator %}
       <tr>
         <th scope="row">
-          {{ donation.id }}
+          {{ entity.id }}
         </th>
         <td>
-          <a href="{% url 'donation_details' donation.pk %}">
-            {{ donation.chefe_da_familia.chefe_da_familia }}
+          <a href="{% url 'entity_details' entity.pk %}">
+            {{ entity.nome_fantasia }}
           </a>
         </td>
         <td>
-          {{ donation.data }}
+          {{ entity.endereco }}
         </td>
         <td>
-          {{ donation.usuario.first_name }}
+          {{ entity.representante.first_name }}
         </td>
       </tr>
     {% endfor %}
   {% else %}
     <tr>
-      <td colspan="4">Não existem doações cadastradas.</td>
+      <td colspan="4">Não existem entidades cadastradas.</td>
     </tr>
   {% endif %}
 {% endblock %}
@@ -70,7 +69,7 @@
   {% if paginator.has_other_pages %}
     <div>
       {% if paginator.has_previous %}
-        <a class="activated" href="{% url 'donation' %}?page={{ paginator.previous_page_number }}">
+        <a class="activated" href="{% url 'entity' %}?page={{ paginator.previous_page_number }}">
           <i class="fas fa-chevron-left"></i>
         </a>
       {% else %}
@@ -85,14 +84,14 @@
             {{ page }}
           </a>
         {% elif page > paginator.number|add:'-3' and page < paginator.number|add:'3' %}
-          <a class="activated" href="{% url 'donation' %}?page={{ page }}">
+          <a class="activated" href="{% url 'entity' %}?page={{ page }}">
             {{ page }}
           </a>         
         {% endif %}
       {% endfor %}
 
       {% if paginator.has_next %}
-        <a class="activated" href="{% url 'donation' %}?page={{ paginator.next_page_number }}">
+        <a class="activated" href="{% url 'entity' %}?page={{ paginator.next_page_number }}">
           <i class="fas fa-chevron-right"></i>
         </a>
       {% else %}
