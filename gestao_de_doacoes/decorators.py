@@ -19,7 +19,7 @@ def is_auth(view_function):
 
     return wrapper_function
 
-def allowed(allowed_roles=[]):
+def allowed(allowed_roles=[], currentPage=''):
     def decorator(view_function):
         def wrapper_function(request, *args, **kwargs):
             if  request.user.is_superuser:
@@ -27,19 +27,19 @@ def allowed(allowed_roles=[]):
             else:
                 groups = None
                 if request.user.groups.exists():
-                    groups = request.user.groups.all().name
+                    groups = request.user.groups.all()
 
                     can = False
                     for group in groups:
-                        if group in allowed_roles:
+                        if group.name in allowed_roles:
                             can = True
 
                     if can:
                         return view_function(request, *args, **kwargs)
                     else:
-                        return redirect('/')
+                        return redirect(currentPage)
                 else:
-                    return redirect('/')
+                    return redirect(currentPage)
                      
         return wrapper_function 
 

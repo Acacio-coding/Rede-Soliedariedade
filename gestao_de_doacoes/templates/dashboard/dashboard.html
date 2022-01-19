@@ -1,13 +1,14 @@
 {% extends "base.html" %} 
 {% load static %}
+{% load auth_extras %}
 
 {% block style %}
   <link rel="stylesheet" href="{% static 'css/dashboard/dashboard.css' %}">
 {% endblock %}
 
 {% block content %}
-  {% if user.is_representante or user.is_superuser %}
-    <div class="row p-3">
+  <div class="row p-3">
+  {% if request.user.is_representante or request.user.is_superuser %}
       <div class="col bg-dark m-1 p-3 count-item">
         <h3 class="title">Usuários</h3>
         <div class="percentage-holder">
@@ -22,22 +23,23 @@
           </div>
         </div>
       </div>
-  {% endif %}
+  
 
-    <div class="col bg-dark m-1 p-3 count-item">
-      <h3 class="title">Entidades</h3>
-      <div class="percentage-holder"> 
-        <h4 class="" id="entity-percentage"></h4>
-        <h4>em relação ao último mês.</h4>
-      </div>
-      
+      <div class="col bg-dark m-1 p-3 count-item">
+        <h3 class="title">Entidades</h3>
+        <div class="percentage-holder"> 
+          <h4 class="" id="entity-percentage"></h4>
+          <h4>em relação ao último mês.</h4>
+        </div>
+        
 
-      <div class="info-holder">
-        <i class="fas fa-building icon"></i>
-        <div class="counter" id="entity-counter">
+        <div class="info-holder">
+          <i class="fas fa-building icon"></i>
+          <div class="counter" id="entity-counter">
+          </div>
         </div>
       </div>
-    </div>
+    {% endif %}
 
     <div class="col bg-dark m-1 p-3 count-item">
       <h3 class="title">Famílias</h3>
@@ -76,69 +78,119 @@
   <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
   <!-- Counters -->
-  <script>
-    const userCounter = document.querySelector("#user-counter")
-    const userPercentage = document.querySelector("#user-percentage")
-    const entityCounter = document.querySelector("#entity-counter");
-    const entityPercentage = document.querySelector("#entity-percentage")
-    const familyCounter = document.querySelector("#family-counter");
-    const familyPercentage = document.querySelector("#family-percentage");
-    const donationCounter = document.querySelector("#donation-counter");
-    const donationPercentage = document.querySelector("#donation-percentage");
-   
-    const count = (value, end, tag) => {
-      tag.innerHTML = value;
+  {% if request.user|has_group:"Usuário" %}
+    <script>
+      const familyCounter = document.querySelector("#family-counter");
+      const familyPercentage = document.querySelector("#family-percentage");
+      const donationCounter = document.querySelector("#donation-counter");
+      const donationPercentage = document.querySelector("#donation-percentage");
+    
+      const count = (value, end, tag) => {
+        tag.innerHTML = value;
 
-      if (value < end)
-        setTimeout(() => count(value + 1, end, tag), 10);
-    }
-
-    const getPercentage = (tag, last, count) => {
-      if ((last * count)/100 >= 0) {
-        tag.classList.add("text-success")
-        return "+" + (last * count)/100 + "%";
-      } else {
-        tag.classList.add("text-danger")
-        return "-" + (last * count)/100 + "%";
-      }
-    }
-
-    window.onload = () => {
-      const start = 0;
-
-      const users = {
-        counter: userCounter,
-        end: "{{ user_count }}",
-        last_month: "{{ user_lastmonth }}",
+        if (value < end)
+          setTimeout(() => count(value + 1, end, tag), 10);
       }
 
-      const entities = {
-        counter: entityCounter,
-        end: "{{ entity_count }}",
-        last_month: "{{ entity_lastmonth }}",
+      const getPercentage = (tag, last, count) => {
+        if ((last * count)/100 >= 0) {
+          tag.classList.add("text-success")
+          return "+" + (last * count)/100 + "%";
+        } else {
+          tag.classList.add("text-danger")
+          return "-" + (last * count)/100 + "%";
+        }
       }
 
-      const families = {
-        counter: familyCounter,
-        end: "{{ family_count }}", 
-        last_month: "{{ family_lastmonth }}",
+      window.onload = () => {
+        const start = 0;
+
+        const families = {
+          counter: familyCounter,
+          end: "{{ family_count }}", 
+          last_month: "{{ family_lastmonth }}",
+        }
+
+        const donations = {
+          counter: donationCounter,
+          end: "{{ donation_counts }}",
+          last_month: "{{ donation_lastmonth }}",
+        }
+
+        count(start, families.end, families.counter);
+        count(start, donations.end, donations.counter);
+
+        familyPercentage.innerHTML = getPercentage(familyPercentage, families.last_month, families.end) 
+        donationPercentage.innerHTML = getPercentage(donationPercentage, donations.last_month, donations.end) 
+      }
+    </script>
+  {% endif %}
+
+  {% if user.is_representante or user.is_superuser %}
+    <script>
+      const userCounter = document.querySelector("#user-counter")
+      const userPercentage = document.querySelector("#user-percentage")
+      const entityCounter = document.querySelector("#entity-counter");
+      const entityPercentage = document.querySelector("#entity-percentage")
+      const familyCounter = document.querySelector("#family-counter");
+      const familyPercentage = document.querySelector("#family-percentage");
+      const donationCounter = document.querySelector("#donation-counter");
+      const donationPercentage = document.querySelector("#donation-percentage");
+    
+      const count = (value, end, tag) => {
+        tag.innerHTML = value;
+
+        if (value < end)
+          setTimeout(() => count(value + 1, end, tag), 10);
       }
 
-      const donations = {
-        counter: donationCounter,
-        end: "{{ donation_counts }}",
-        last_month: "{{ donation_lastmonth }}",
+      const getPercentage = (tag, last, count) => {
+        if ((last * count)/100 >= 0) {
+          tag.classList.add("text-success")
+          return "+" + (last * count)/100 + "%";
+        } else {
+          tag.classList.add("text-danger")
+          return "-" + (last * count)/100 + "%";
+        }
       }
 
-      count(start, users.end, users.counter);
-      count(start, entities.end, entities.counter);
-      count(start, families.end, families.counter);
-      count(start, donations.end, donations.counter);
+      window.onload = () => {
+        const start = 0;
 
-      userPercentage.innerHTML = getPercentage(userPercentage, users.last_month, users.end)
-      entityPercentage.innerHTML = getPercentage(entityPercentage, entities.last_month, entities.end) 
-      familyPercentage.innerHTML = getPercentage(familyPercentage, families.last_month, families.end) 
-      donationPercentage.innerHTML = getPercentage(donationPercentage, donations.last_month, donations.end) 
-    }
-  </script>
+        const users = {
+          counter: userCounter,
+          end: "{{ user_count }}",
+          last_month: "{{ user_lastmonth }}",
+        }
+
+        const entities = {
+          counter: entityCounter,
+          end: "{{ entity_count }}",
+          last_month: "{{ entity_lastmonth }}",
+        }
+
+        const families = {
+          counter: familyCounter,
+          end: "{{ family_count }}", 
+          last_month: "{{ family_lastmonth }}",
+        }
+
+        const donations = {
+          counter: donationCounter,
+          end: "{{ donation_counts }}",
+          last_month: "{{ donation_lastmonth }}",
+        }
+
+        count(start, users.end, users.counter);
+        count(start, entities.end, entities.counter);
+        count(start, families.end, families.counter);
+        count(start, donations.end, donations.counter);
+
+        userPercentage.innerHTML = getPercentage(userPercentage, users.last_month, users.end)
+        entityPercentage.innerHTML = getPercentage(entityPercentage, entities.last_month, entities.end) 
+        familyPercentage.innerHTML = getPercentage(familyPercentage, families.last_month, families.end) 
+        donationPercentage.innerHTML = getPercentage(donationPercentage, donations.last_month, donations.end) 
+      }
+    </script>
+  {% endif %}
 {% endblock %}

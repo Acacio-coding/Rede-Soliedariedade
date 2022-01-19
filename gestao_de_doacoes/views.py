@@ -1,4 +1,5 @@
 import json
+from django.core import serializers
 from datetime import date, timedelta
 from django.core.paginator import Paginator
 from gestao_de_doacoes.decorators import is_auth, allowed
@@ -9,12 +10,12 @@ from gestao_de_doacoes.forms import FamilyForm, FamilyMemberForm, DonationForm
 
 #dashboard.
 @is_auth
-@allowed(allowed_roles=['Usuário', 'Representante'])
+@allowed(allowed_roles=['Usuário', 'Representante'], currentPage='dashboard')
 def index(request):
     return redirect('dashboard')
 
 @is_auth
-@allowed(allowed_roles=['Usuário', 'Representante'])
+@allowed(allowed_roles=['Usuário', 'Representante'], currentPage='dashboard')
 def dashboard(request):
     users = Usuario.objects.filter(groups__name='Usuário')
     families = Familia.objects.all()
@@ -39,7 +40,7 @@ def dashboard(request):
 
 #family
 @is_auth
-@allowed(allowed_roles=['Usuário', 'Representante'])
+@allowed(allowed_roles=['Usuário', 'Representante'], currentPage='family')
 def family(request):
     family = Familia.objects.all()
     family_paginator = Paginator(family, 10)
@@ -54,12 +55,12 @@ def family(request):
     return render(request, 'family/family.html', context)
 
 @is_auth
-@allowed(allowed_roles=['Usuário', 'Representante'])
+@allowed(allowed_roles=['Usuário', 'Representante'], currentPage='search_family')
 def search_family(request):
     if 'search_term' in request.GET and request.GET['search_term']:   
         search_term = request.GET.get('search_term')
 
-        families = Familia.objects.filter(chefe_da_familia__contains=search_term) or Familia.objects.filter(endereco__contains=search_term) or Familia.objects.filter(telefone1__contains=search_term)
+        families = Familia.objects.filter(chefe_da_familia__contains=search_term) | Familia.objects.filter(endereco__contains=search_term) | Familia.objects.filter(telefone1__contains=search_term)
         family_paginator = Paginator(families, 10)
         page_num = request.GET.get('page', 1)
         paginator = family_paginator.get_page(page_num)
@@ -75,7 +76,7 @@ def search_family(request):
         return redirect('family')
 
 @is_auth
-@allowed(allowed_roles=['Usuário', 'Representante'])
+@allowed(allowed_roles=['Usuário', 'Representante'], currentPage='family_details')
 def family_details(request, pk):
     family = get_object_or_404(Familia, pk=pk)
     members = IntegranteFamiliar.objects.filter(chefe_da_familia__exact=family.id)
@@ -112,7 +113,7 @@ def family_details(request, pk):
     return render(request, 'family/family_detail.html', context)
 
 @is_auth
-@allowed(allowed_roles=['Usuário', 'Representante'])    
+@allowed(allowed_roles=['Usuário'], currentPage='create_family')    
 def create_family(request):
     form = FamilyForm()
 
@@ -129,7 +130,7 @@ def create_family(request):
     return render(request, 'family/create_family.html', context)
 
 @is_auth
-@allowed(allowed_roles=['Usuário', 'Representante'])
+@allowed(allowed_roles=['Usuário', 'Representante'], currentPage='member_details')
 def member_details(request, pk_family, pk_member):
     family = get_object_or_404(Familia, pk=pk_family)
     member = get_object_or_404(IntegranteFamiliar, pk=pk_member)
@@ -158,7 +159,7 @@ def member_details(request, pk_family, pk_member):
 
 #donation
 @is_auth
-@allowed(allowed_roles=['Usuário', 'Representante'])
+@allowed(allowed_roles=['Usuário', 'Representante'], currentPage='donation')
 def donation(request):
     donation = Doacao.objects.all()
     donation_paginator = Paginator(donation, 10)
@@ -173,12 +174,12 @@ def donation(request):
     return render(request, 'donation/donation.html', context)
 
 @is_auth
-@allowed(allowed_roles=['Usuário', 'Representante'])
+@allowed(allowed_roles=['Usuário', 'Representante'], currentPage='search_donation')
 def search_donation(request):
     if 'search_term' in request.GET and request.GET['search_term']:   
         search_term = request.GET.get('search_term')
 
-        donations = Doacao.objects.filter(chefe_da_familia__chefe_da_familia__contains=search_term) or Doacao.objects.filter(usuario__first_name__contains=search_term) or Doacao.objects.filter(data__contains=search_term) or Doacao.objects.filter(justificativa__contains=search_term)
+        donations = Doacao.objects.filter(chefe_da_familia__chefe_da_familia__contains=search_term) | Doacao.objects.filter(usuario__first_name__contains=search_term) | Doacao.objects.filter(data__contains=search_term) | Doacao.objects.filter(justificativa__contains=search_term)
         donation_paginator = Paginator(donations, 10)
         page_num = request.GET.get('page', 1)
         paginator = donation_paginator.get_page(page_num)
@@ -194,7 +195,7 @@ def search_donation(request):
         return redirect('donation')
 
 @is_auth
-@allowed(allowed_roles=['Usuário', 'Representante'])    
+@allowed(allowed_roles=['Usuário'], currentPage='donation')    
 def create_donation(request):
     form_donation = DonationForm()
     families = Familia.objects.all()
@@ -211,18 +212,61 @@ def create_donation(request):
 
         for element in recieved_items:
             item_found = get_object_or_404(Item, pk=element['item'])
-            to_create = ItensDoacao.objects.create(doacao=savedModel, item=item_found, quantidade=element['quantidade'])
+            ItensDoacao.objects.create(doacao=savedModel, item=item_found, quantidade=element['quantidade'])
 
         return redirect('donation')    
     
     context = {
       'form_donation': form_donation,
       'families': families,
-      'users': users,
       'items': items,
+      'users': users,
     }
 
     return render(request, 'donation/create_donation.html', context)
 
+@is_auth
+@allowed(allowed_roles=['Usuário', 'Representante'], currentPage='donation') 
 def donation_details(request, pk):
-    return render(request, 'donation/donation_detail.html')
+    donation = get_object_or_404(Doacao, pk=pk)
+    families = Familia.objects.all()
+    users = Usuario.objects.filter(groups__name='Usuário')
+    items = Item.objects.all()
+    items_donation = serializers.serialize('json', ItensDoacao.objects.filter(doacao=pk))
+    form = DonationForm()
+   
+    if request.method == 'POST':
+        if request.POST.get('update'):
+            form = DonationForm(request.POST)
+            if form.is_valid():
+                donation.chefe_da_familia = get_object_or_404(Familia, pk=request.POST.get('chefe_da_familia'))
+                donation.usuario = get_object_or_404(Usuario, pk=request.POST.get('usuario'))
+                donation.data = request.POST.get('data')
+                donation.justificativa = request.POST.get('justificativa')
+                donation.save()
+
+                recieved_items = json.loads(request.POST.get('selectedItems'))
+                to_be_deleted = ItensDoacao.objects.filter(doacao=pk)
+
+                for item in to_be_deleted:
+                    item.delete()
+
+                for element in recieved_items:
+                    item_found = get_object_or_404(Item, pk=element['item'])
+                    ItensDoacao.objects.create(doacao=donation, item=item_found, quantidade=element['quantidade'])
+
+                return redirect('donation_details', pk=pk)
+        elif request.POST.get('remove'):
+            donation.delete() 
+            return redirect('donation')   
+                
+    context = {
+      'donation': donation,
+      'form': form,
+      'users': users,
+      'items': items,
+      'families': families,
+      'items_donation': items_donation,
+    }
+
+    return render(request, 'donation/donation_detail.html', context)

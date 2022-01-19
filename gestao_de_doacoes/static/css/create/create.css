@@ -110,6 +110,12 @@
   font-size: 15px !important;
 }
 
+.root-container .content-holder form div #usuario:focus {
+  outline: none !important;
+  -webkit-box-shadow: inset 0 -1px 0 #ddd !important;
+          box-shadow: inset 0 -1px 0 #ddd !important;
+}
+
 .root-container .content-holder form div select {
   padding: 0.3em 0.5em !important;
   height: 34px !important;

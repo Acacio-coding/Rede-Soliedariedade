@@ -170,9 +170,9 @@
   color: rgba(255, 255, 255, 0.8);
 }
 
-@media screen and (min-width: 1280px) and (max-width: 1399px) {
+@media screen and (min-width: 1280px) and (max-width: 1400px) {
   .root-container .title-holder {
-    width: 45%;
+    width: 60%;
   }
 }
 
@@ -184,13 +184,13 @@
 
 @media screen and (min-width: 1400px) {
   .root-container .title-holder {
-    width: 40%;
+    width: 50%;
   }
 }
 
 @media screen and (min-width: 1920px) {
   .root-container .title-holder {
-    width: 35%;
+    width: 40%;
   }
 }
 
@@ -205,9 +205,9 @@
   padding: 2em 1.25em 1.5em 1.25em;
 }
 
-@media screen and (min-width: 1280px) and (max-width: 1399px) {
+@media screen and (min-width: 1280px) and (max-width: 1400px) {
   .root-container .content-holder {
-    width: 45%;
+    width: 60%;
   }
 }
 
@@ -219,13 +219,13 @@
 
 @media screen and (min-width: 1400px) {
   .root-container .content-holder {
-    width: 40%;
+    width: 50%;
   }
 }
 
 @media screen and (min-width: 1920px) {
   .root-container .content-holder {
-    width: 35%;
+    width: 40%;
   }
 }
 
@@ -258,10 +258,19 @@
 }
 
 .root-container .content-holder form div input {
-  width: 100%;
-  padding: 0.3em 0.5em;
-  border: solid 1px #c7ccd1;
-  font-size: 15px;
+  width: 100% !important;
+  padding: 0.3em 0.5em !important;
+  border: solid 1px #c7ccd1 !important;
+  border-radius: 0 !important;
+  font-size: 15px !important;
+}
+
+.root-container .content-holder form div select {
+  padding: 0.3em 0.5em !important;
+  height: 34px !important;
+  border-radius: 0 !important;
+  border: solid 1px #c7ccd1 !important;
+  font-size: 15px !important;
 }
 
 .root-container .content-holder form .button-holder {
